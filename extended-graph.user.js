@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         info.gesundheitsministerium.gv.at TrendPercent extended
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Show percents
 // @author       Philipp
 // @match        https://info.gesundheitsministerium.gv.at/
@@ -12,6 +12,7 @@
 /*
 Changelog:
 
+0.6 dynamic legend and different markers
 0.5 added interval to add diagram after reload
 
  */
@@ -83,32 +84,55 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
                     value: 10
                 }]
             },{
-                title : "gesamt erkrankt",
+                title : "Gesamt erkrankt",
                 titleFontColor: "#c0504e",
                 labelFontColor: "#c0504e",
                 includeZero: true
             },{
-                title : "logarithmisch gesamt erkrankt",
+                title : "Logarithmisch gesamt erkrankt",
                 titleFontColor: "#9bbb58",
                 labelFontColor: "#9bbb58",
                 logarithmic: true
             }],
             data: [{
                 type: "line",
+                showInLegend: true,
+                legendText: "Steigerung in %",
+                markerType: "circle",
                 axisYIndex: 0,
                 lineColor: "#4f81bc",
                 dataPoints: ps
             },{
                 type: "line",
+                showInLegend: true,
+                legendText : "Gesamt erkrankt",
+                markerType: "triangle",
                 axisYIndex: 1,
                 lineColor: "#c0504e",
                 dataPoints: dpTrend
             },{
                 type: "line",
+                showInLegend: true,
+                legendText : "Logarithmisch gesamt erkrankt",
+                markerType: "square",
                 axisYIndex: 2,
                 lineColor: "#9bbb58",
                 dataPoints: dpTrend
-            }]
+            }],
+            legend: {
+                cursor: "pointer",
+                itemclick: function (e) {
+                    //console.log("legend click: " + e.dataPointIndex);
+                    //console.log(e);
+                    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                        e.dataSeries.visible = false;
+                    } else {
+                        e.dataSeries.visible = true;
+                    }
+
+                    e.chart.render();
+                }
+            }
         });
         chart5.render();
         console.log(LOGPREFIX + methodname + "done");
