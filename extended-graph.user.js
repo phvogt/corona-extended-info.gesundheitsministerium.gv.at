@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         info.gesundheitsministerium.gv.at TrendPercent extended
 // @namespace    http://tampermonkey.net/
-// @version      0.8
+// @version      0.9
 // @description  Show percents
 // @author       Philipp
 // @match        https://info.gesundheitsministerium.gv.at/
@@ -12,6 +12,7 @@
 /*
 Changelog:
 
+0.9 fixed Steigerungsrate line to 7%
 0.8 number formatting (percentages), added margin, removed original chart
 0.7 fixed new layout
 0.6 dynamic legend and different markers
@@ -85,7 +86,7 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
                 valueFormatString: "###%",
                 includeZero: true,
                 stripLines:[{
-                    value: 10
+                    value: 0.07
                 }]
             },{
                 title : "Gesamt erkrankt",
