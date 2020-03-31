@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         info.gesundheitsministerium.gv.at TrendPercent extended
 // @namespace    http://tampermonkey.net/
-// @version      0.7
+// @version      0.8
 // @description  Show percents
 // @author       Philipp
 // @match        https://info.gesundheitsministerium.gv.at/
@@ -12,6 +12,7 @@
 /*
 Changelog:
 
+0.8 number formatting (percentages), added margin, removed original chart
 0.7 fixed new layout
 0.6 dynamic legend and different markers
 0.5 added interval to add diagram after reload
@@ -48,9 +49,10 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
         var row = document.createElement("DIV");
         row.classList.add("row");
         var col = document.createElement("DIV");
-        col.classList.add("col-lg-9");
+        col.classList.add("col-lg-12");
         col.classList.add("col-md-12");
         col.classList.add("col-sm-12");
+        col.classList.add("mb-4");
         col.style.marginTop = "0.3em";
         var diagram = document.createElement("DIV");
         diagram.setAttribute("id", "customTrend");
@@ -65,7 +67,7 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
         for (var i=0;i<maxi-1;i++) {
             var v1 = dpTrend[i].y;
             var v2 = dpTrend[i+1].y;
-            var p= Math.trunc((v2/v1-1)*100);
+            var p = (v2/v1-1);
 //            console.log(p);
             ps.push({"label" : dpTrend[i].label, "y":p, "x" : i+1});
         }
@@ -77,9 +79,10 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
                 text: "Nationaler Trend", fontFamily: "calibri", fontSize: 20, fontWeight: "normal"
             },
             axisY: [{
-                title : "Steigerung in %",
+                title : "Steigerung",
                 titleFontColor: "#4f81bc",
                 labelFontColor: "#4f81bc",
+                valueFormatString: "###%",
                 includeZero: true,
                 stripLines:[{
                     value: 10
@@ -98,9 +101,10 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
             data: [{
                 type: "line",
                 showInLegend: true,
-                legendText: "Steigerung in %",
+                legendText: "Steigerung",
                 markerType: "circle",
                 axisYIndex: 0,
+                yValueFormatString: "###.##%",
                 lineColor: "#4f81bc",
                 dataPoints: ps
             },{
@@ -137,6 +141,12 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
         });
         chart5.render();
         console.log(LOGPREFIX + methodname + "done");
+
+        // remove original trend graph
+        var origTrendChart = document.querySelector("body > main > div > div:nth-child(2) > div:nth-child(6)");
+        if (origTrendChart != null) {
+            origTrendChart.parentElement.removeChild(origTrendChart);
+        }
     }
 
     // MAIN method
