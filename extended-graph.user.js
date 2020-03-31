@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         info.gesundheitsministerium.gv.at TrendPercent extended
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Show percents
 // @author       Philipp
 // @match        https://info.gesundheitsministerium.gv.at/
@@ -12,6 +12,7 @@
 /*
 Changelog:
 
+0.7 fixed new layout
 0.6 dynamic legend and different markers
 0.5 added interval to add diagram after reload
 
@@ -47,7 +48,7 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
         var row = document.createElement("DIV");
         row.classList.add("row");
         var col = document.createElement("DIV");
-        col.classList.add("col-lg-6");
+        col.classList.add("col-lg-9");
         col.classList.add("col-md-12");
         col.classList.add("col-sm-12");
         col.style.marginTop = "0.3em";
@@ -56,7 +57,7 @@ var LOGPREFIX = "info.gesundheitsministerium.gv.at: ";
         diagram.style.minHeight = "400px";
         col.appendChild(diagram);
         row.appendChild(col);
-        var rows = document.getElementsByClassName("container-fluid")[0];
+        var rows = document.getElementsByClassName("container")[1];
         rows.insertBefore(row, rows.firstChild);
 
         var ps=[];
